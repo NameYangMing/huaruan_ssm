@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huaruan.dao.EmpDao">
+
+    <!--查询分页-->
+    <select id="findByPage" resultType="Emp">
+        select * from Emp limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+        select count(id) from Emp
+    </select>
+
+    <!--删除一行-->
+    <delete id="deleteRow" parameterType="int">
+        delete from Emp where  id=#{id}
+    </delete>
+
+    <!--修改-->
+    <update id="updateRow" parameterType="Emp">
+        update emp set name=#{name},age=#{age},address=#{address},birthday=#{birthday} where id=#{id}
+    </update>
+    <!--查询单个-->
+    <select id="queryOne" parameterType="int" resultType="Emp">
+      select * from Emp where id=#{id}
+    </select>
+    <!--增加用户-->
+    <insert id="addOne" parameterType="Emp">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into Emp(name,age,address,birthday) values(#{name},#{age},#{address},#{birthday})
+    </insert>
+
+    <!--模糊查询-->
+    <select id="likeAll" parameterType="java.lang.String" resultType="Emp">
+        select * from Emp where name like "%"#{name}"%"
+    </select>
+
+    <!--批量删除-->
+    <delete id="delMany" parameterType="int">
+        delete from emp where id in 
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--&lt;!&ndash;插入数据&ndash;&gt;
+
+
+    &lt;!&ndash;批量删除
+        ID:数据库中的id不分大小写
+        collection:dao传过来的数据，即dao中的参数
+    &ndash;&gt;
+    <delete id="deleteMany" parameterType="int">
+        delete from Emp where ID in
+        <foreach collection="array" item="ids" open="(" separator="," close=")" >
+            #{ids}
+        </foreach>
+    </delete>
+    &lt;!&ndash;模糊查询&ndash;&gt;
+    -->
+
+</mapper>
